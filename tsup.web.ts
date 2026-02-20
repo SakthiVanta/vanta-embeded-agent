@@ -5,11 +5,21 @@ export default defineConfig({
     format: ['iife'],
     globalName: 'Vanta',
     splitting: false,
-    sourcemap: true,
+    sourcemap: false,
     clean: true,
     platform: 'browser',
     minify: true,
     outDir: 'dist/web',
-    // Bundle React and ReactDOM
+    metafile: true,
+    // Bundle React and ReactDOM using Preact compat to keep the bundle lightweight
     noExternal: ['react', 'react-dom'],
+    esbuildOptions(options) {
+        options.alias = {
+            ...options.alias,
+            'react': 'preact/compat',
+            'react-dom/test-utils': 'preact/test-utils',
+            'react-dom': 'preact/compat',
+            'react/jsx-runtime': 'preact/jsx-runtime'
+        };
+    },
 })

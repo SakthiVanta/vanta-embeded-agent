@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
-import { VantaApiClient, Message } from '../lib/api';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { VantaApiClient, Message, AgentConfig } from '../lib/api';
 
 interface UseChatProps {
     agentId: string;
@@ -10,10 +10,27 @@ interface UseChatProps {
 export function useChat({ agentId, apiKey, apiBaseUrl }: UseChatProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [agentConfig, setAgentConfig] = useState<AgentConfig | null>(null);
+    const [isConfigLoading, setIsConfigLoading] = useState(true);
     const [sessionId] = useState(() => crypto.randomUUID());
 
     // Initialize API client
     const apiClientRef = useRef(new VantaApiClient({ agentId, apiKey, apiBaseUrl }));
+
+    useEffect(() => {
+        const fetchConfig = async () => {
+            setIsConfigLoading(true);
+            const config = await apiClientRef.current.getAgentConfig();
+            setAgentConfig(config);
+
+            // If the agent has a welcome message configured, automatically add it.
+            if (config?.welcomeMessage) {
+                setMessages([{ role: 'assistant', content: config.welcomeMessage }]);
+            }
+            setIsConfigLoading(false);
+        };
+        fetchConfig();
+    }, [agentId]);
 
     const sendMessage = useCallback(async (content: string) => {
         if (!content.trim() || isLoading) return;
@@ -47,10 +64,19 @@ export function useChat({ agentId, apiKey, apiBaseUrl }: UseChatProps) {
 
         } catch (error) {
             console.error('Failed to send message:', error);
-            setMessages((prev: Message[]) => [...prev, {
-                role: 'assistant',
-                content: 'Sorry, I encountered an error. Please try again.'
-            }]);
+            // Replace the empty placeholder message with the error message
+            setMessages((prev: Message[]) => {
+                const newMessages = [...prev];
+                // Pop the empty placeholder if it's there and empty
+                const lastMsg = newMessages[newMessages.length - 1];
+                if (lastMsg && lastMsg.role === 'assistant' && !lastMsg.content) {
+                    newMessages.pop();
+                }
+                return [...newMessages, {
+                    role: 'assistant',
+                    content: 'Sorry, I encountered an error. Please try again.'
+                }];
+            });
         } finally {
             setIsLoading(false);
         }
@@ -59,6 +85,8 @@ export function useChat({ agentId, apiKey, apiBaseUrl }: UseChatProps) {
     return {
         messages,
         sendMessage,
-        isLoading
+        isLoading,
+        agentConfig,
+        isConfigLoading
     };
 }

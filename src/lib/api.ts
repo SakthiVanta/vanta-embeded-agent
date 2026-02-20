@@ -9,6 +9,27 @@ export interface Message {
     content: string;
 }
 
+export interface AgentConfig {
+    name?: string;
+    description?: string;
+    avatar?: string;
+    primaryColor?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    buttonColor?: string;
+    buttonTextColor?: string;
+    welcomeMessage?: string;
+    mood?: string;
+    fontFamily?: string;
+    supportEmail?: string;
+    contactLink?: string;
+    logoUrl?: string;
+    userPlaceholder?: string;
+    requireAuth?: boolean;
+    customCss?: string;
+    suggestions?: string[];
+}
+
 export class VantaApiClient {
     private config: VantaConfig;
     private baseUrl: string;
@@ -21,7 +42,7 @@ export class VantaApiClient {
             (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_VANTA_API_URL || process.env.VANTA_API_URL : undefined) ||
             (typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.VITE_VANTA_API_URL : undefined);
 
-        this.baseUrl = config.apiBaseUrl || envApiUrl || 'https://vanta.bookmarks.lat/api';
+        this.baseUrl = config.apiBaseUrl || envApiUrl || 'http://localhost:3001/api';
     }
 
     private getHeaders() {
@@ -41,6 +62,25 @@ export class VantaApiClient {
         }
 
         return headers;
+    }
+
+    async getAgentConfig(): Promise<AgentConfig | null> {
+        try {
+            const response = await fetch(`${this.baseUrl}/agents/${this.config.agentId}/config`, {
+                method: 'GET',
+                headers: this.getHeaders(),
+            });
+
+            if (!response.ok) {
+                console.warn(`Failed to fetch agent config: ${response.statusText}`);
+                return null;
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching agent config:', error);
+            return null;
+        }
     }
 
     async createSession() {

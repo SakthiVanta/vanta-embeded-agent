@@ -21,7 +21,8 @@
     }
   },
   "dependencies": {
-    "zod": "^3.22.0"
+    "preact": "^10.28.4",
+    "preact-render-to-string": "^6.6.5"
   },
   "devDependencies": {
     "@types/node": "^20.19.33",
@@ -34,8 +35,8 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "keywords": [
     "ai",
