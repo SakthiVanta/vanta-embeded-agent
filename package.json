@@ -1,0 +1,51 @@
+{
+  "name": "vanta-agent-embed-sdk",
+  "version": "1.0.0",
+  "description": "Vanta AI Agent Embed SDK for embedding AI agents into websites",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --external react",
+    "build:web": "tsup --config tsup.web.ts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch --external react",
+    "start": "npx serve -p 5000",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.33",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^8.56.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "chatbot",
+    "embed",
+    "vanta"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}

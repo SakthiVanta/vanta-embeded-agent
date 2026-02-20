@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanta Agent Embed Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d0d0d38;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 2rem;
+        }
+
+        .instruction {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Vanta Agent Embed Test</h1>
+        <div class="instruction">
+            <h2>How to test</h2>
+            <ol>
+                <li>Ensure the Vanta Platform is running on localhost:3000</li>
+                <li>Ensure you have a valid Agent ID and API Key</li>
+                <li>Update the script below with your IDs</li>
+            </ol>
+            <p>The agent should appear in the bottom right corner.</p>
+        </div>
+    </div>
+
+    <!-- 
+        Include the bundled script. 
+        Note: Since we are bundling React in the IFFE build for simplicity here, 
+        we don't need external React scripts.
+        If strict split is needed later, we can add React/ReactDOM CDN links.
+    -->
+    <script src="./dist/web/web.global.js"></script>
+
+    <script>
+        // Initialize the agent
+        // REPLACE WITH YOUR ACTUAL VALUES
+        const AGENT_ID = 'cmlt9394y0002xki6j2en5bc0'; // Get from Dashboard -> Agents
+        const API_KEY = 'vk_ed441c1dd79b4f3dacca4d8dcdc4ed127f031c7134354be089f567612da5a35c';   // Get from Settings -> API Keys
+
+        // Check if Vanta is loaded
+        if (window.Vanta) {
+            window.Vanta.init({
+                agentId: AGENT_ID,
+                apiKey: API_KEY,
+                apiBaseUrl: 'http://localhost:3001/api', // Point to local dev server
+                type: 'floating',
+                position: 'bottom-right',
+                theme: {
+                    primaryColor: '#000000'
+                }
+            });
+            console.log('Vanta Agent initialized');
+        } else {
+            console.error('Vanta script not loaded');
+        }
+    </script>
+</body>
+
+</html>
