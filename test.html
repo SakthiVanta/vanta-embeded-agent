@@ -69,10 +69,8 @@
                 apiKey: API_KEY,
                 apiBaseUrl: 'http://localhost:3000/api', // Point to local dev server
                 type: 'floating',
-                position: 'bottom-right',
-                theme: {
-                    primaryColor: '#000000'
-                }
+                position: 'bottom-right'
+                // Removed hardcoded primaryColor: '#000000' so DB config applies cleanly
             });
             console.log('Vanta Agent initialized');
         } else {

@@ -32,6 +32,11 @@ export const VantaAgent: React.FC<VantaAgentProps> = ({
         apiKey,
         apiBaseUrl
     });
+
+    useEffect(() => {
+        console.log("AGENT CONFIG LOADED:", agentConfig);
+    }, [agentConfig]);
+
     const [inputValue, setInputValue] = useState('');
     const [isExpanded, setIsExpanded] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -55,10 +60,10 @@ export const VantaAgent: React.FC<VantaAgentProps> = ({
     const toggleChat = () => setIsOpen(!isOpen);
     const toggleExpand = () => setIsExpanded(!isExpanded);
 
-    // Merge user theme with backend config, prioritizing user theme
-    const primaryColor = theme?.primaryColor || agentConfig?.primaryColor || '#00E5FF';
-    const bgColor = theme?.backgroundColor || agentConfig?.backgroundColor || 'rgba(15, 23, 42, 0.85)';
-    const textColor = theme?.textColor || agentConfig?.textColor || '#F8FAFC';
+    // Merge backend config with user theme, prioritizing Backend Config as source of truth
+    const primaryColor = agentConfig?.primaryColor || theme?.primaryColor || '#00E5FF';
+    const bgColor = agentConfig?.backgroundColor || theme?.backgroundColor || 'rgba(15, 23, 42, 0.85)';
+    const textColor = agentConfig?.textColor || theme?.textColor || '#F8FAFC';
     const agentName = agentConfig?.name || 'Vanta Agent';
     const agentAvatar = agentConfig?.avatar;
 
